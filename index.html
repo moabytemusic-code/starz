@@ -195,31 +195,34 @@
         
         button {
             width: 100%;
-            background: linear-gradient(90deg, var(--vibrant-pink), var(--neon-purple));
+            background: linear-gradient(135deg, #8a00e6, #5a00cc);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 16px;
-            font-size: 16px;
-            font-weight: 800;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             border-radius: 12px;
             cursor: pointer;
             margin-top: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 10px rgba(255, 0, 127, 0.4); transform: scale(1); }
-            50% { box-shadow: 0 0 30px rgba(255, 0, 127, 0.8), 0 0 20px rgba(157, 0, 255, 0.6); transform: scale(1.03); }
-            100% { box-shadow: 0 0 10px rgba(255, 0, 127, 0.4); transform: scale(1); }
+        @keyframes ambient-glow {
+            0% { box-shadow: 0 4px 15px rgba(0,0,0,0.5), 0 0 0px rgba(157, 0, 255, 0.2); }
+            50% { box-shadow: 0 4px 15px rgba(0,0,0,0.5), 0 0 15px rgba(157, 0, 255, 0.4); }
+            100% { box-shadow: 0 4px 15px rgba(0,0,0,0.5), 0 0 0px rgba(157, 0, 255, 0.2); }
         }
 
         #start-earning-btn, #submit-lead-btn {
-            animation: pulse-glow 2s infinite ease-in-out;
+            animation: ambient-glow 3s infinite ease-in-out;
         }
         
         button:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 5px 20px rgba(255, 0, 127, 0.6);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.6), 0 0 25px rgba(157, 0, 255, 0.6);
+            background: linear-gradient(135deg, #991aff, #661aff);
             animation: none;
         }
 
