@@ -255,6 +255,8 @@
                     <div id="profit" class="breakdown-value">$340,530</div>
                 </div>
             </div>
+            
+            <button onclick="startEarning()" style="margin-top: 30px; background: linear-gradient(90deg, var(--neon-purple), #6a00cc); color: white; width: 100%; max-width: 400px; padding: 20px; font-size: 20px; box-shadow: 0 0 30px rgba(157, 0, 255, 0.4);">START EARNING ON 5ARZ</button>
         </div>
 
         <div class="chart-container">
@@ -378,10 +380,21 @@
             });
         });
 
+        let affiliateCode = "PPDTN8R3"; // Default Starz affiliate code
+
         // Initial calculation
         window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refParam = urlParams.get('ref');
+            if (refParam) {
+                affiliateCode = refParam;
+            }
             calculate();
         };
+
+        function startEarning() {
+            window.location.href = `https://5arz.com/?ref=${affiliateCode}`;
+        }
     </script>
 </body>
 </html>
