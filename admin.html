@@ -199,9 +199,22 @@
 
     <!-- Firebase Logic -->
     <script type="module">
-        import { auth, db } from './firebase-config.js';
-        import { signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-        import { collection, getDocs, addDoc, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          projectId: "starz-wealth-app-2026",
+          appId: "1:642942907860:web:c60a503faf69ae934c5241",
+          storageBucket: "starz-wealth-app-2026.firebasestorage.app",
+          apiKey: "AIzaSyAI0d-HEWSG7e2-kLqwc5c5G7JgZmV9nq0",
+          authDomain: "starz-wealth-app-2026.firebaseapp.com",
+          messagingSenderId: "642942907860"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
         const loginSection = document.getElementById('login-section');
         const dashboardSection = document.getElementById('dashboard-section');
