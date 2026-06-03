@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neyro + 5arz Compounding Calculator | Aurumrise University</title>
-    <style>
+        <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
         :root {
@@ -36,9 +36,9 @@
             background: rgba(15, 15, 30, 0.95);
             border-radius: 24px;
             padding: 40px;
-            box-shadow: 0 0 60px rgba(0, 255, 157, 0.3),
-                        0 0 120px rgba(157, 0, 255, 0.2);
-            border: 2px solid rgba(0, 255, 157, 0.2);
+            box-shadow: 0 0 60px rgba(157, 0, 255, 0.3),
+                        0 0 120px rgba(0, 255, 157, 0.1);
+            border: 2px solid rgba(157, 0, 255, 0.3);
         }
         
         .header {
@@ -74,12 +74,13 @@
         .5arz-logo {
             background: linear-gradient(90deg, #9d00ff, #6a00cc);
             color: white;
+            box-shadow: 0 0 20px rgba(157, 0, 255, 0.4);
         }
         
         h1 {
             font-size: 32px;
             font-weight: 700;
-            background: linear-gradient(90deg, var(--neon-green), var(--neon-purple));
+            background: linear-gradient(90deg, var(--neon-purple), var(--neon-green));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -95,7 +96,14 @@
             background: rgba(255,255,255,0.05);
             padding: 20px;
             border-radius: 16px;
-            border: 1px solid rgba(0, 255, 157, 0.15);
+            border: 1px solid rgba(157, 0, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .input-group:focus-within {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.2);
+            background: rgba(255,255,255,0.08);
         }
         
         label {
@@ -103,7 +111,7 @@
             font-size: 15px;
             font-weight: 500;
             margin-bottom: 8px;
-            color: #aaa;
+            color: #ccc;
         }
         
         input {
@@ -117,21 +125,22 @@
         }
         
         .result {
-            background: linear-gradient(135deg, #001a0f, #1a0033);
+            background: linear-gradient(135deg, #1a0033, #0a0a0a);
             border-radius: 20px;
             padding: 40px 30px;
             text-align: center;
             margin-bottom: 30px;
-            border: 3px solid var(--neon-green);
-            box-shadow: 0 0 40px rgba(0, 255, 157, 0.4);
+            border: 3px solid var(--neon-purple);
+            box-shadow: 0 0 40px rgba(157, 0, 255, 0.4);
         }
         
         .final-balance {
             font-size: 62px;
             font-weight: 700;
-            color: var(--neon-green);
+            color: var(--neon-purple);
             margin-bottom: 8px;
             line-height: 1;
+            text-shadow: 0 0 20px rgba(157, 0, 255, 0.5);
         }
         
         .breakdown {
@@ -158,9 +167,10 @@
         
         .chart-container {
             margin-top: 30px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.4);
             padding: 20px;
             border-radius: 16px;
+            border: 1px solid rgba(157, 0, 255, 0.1);
         }
         
         canvas {
@@ -169,8 +179,8 @@
         }
         
         button {
-            background: linear-gradient(90deg, var(--neon-green), #00cc7a);
-            color: black;
+            background: linear-gradient(90deg, var(--neon-purple), #6a00cc);
+            color: white;
             border: none;
             padding: 16px 48px;
             font-size: 18px;
@@ -179,7 +189,17 @@
             cursor: pointer;
             margin: 0 auto;
             display: block;
-            box-shadow: 0 0 30px rgba(0, 255, 157, 0.5);
+            box-shadow: 0 0 30px rgba(157, 0, 255, 0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(157, 0, 255, 0.7);
+        }
+        
+        button:active {
+            transform: translateY(0);
         }
         
         .footer {
@@ -190,9 +210,23 @@
             line-height: 1.5;
         }
         
+        /* MOBILE OPTIMIZATION */
         @media (max-width: 768px) {
-            .calculator { padding: 25px; }
-            .final-balance { font-size: 48px; }
+            body { padding: 10px; }
+            .calculator { padding: 25px 20px; border-radius: 16px; margin-bottom: 30px;}
+            .header { flex-direction: column; text-align: center; gap: 15px; }
+            h1 { font-size: 26px; }
+            .logo-container { justify-content: center; width: 100%; flex-direction: column; gap: 10px; }
+            .logo { font-size: 20px; padding: 10px 20px; width: 100%; justify-content: center; }
+            .inputs { grid-template-columns: 1fr; gap: 16px; margin-bottom: 30px; }
+            .input-group { padding: 15px; }
+            input { font-size: 24px; }
+            .result { padding: 30px 20px; }
+            .final-balance { font-size: 44px; }
+            .breakdown { flex-direction: column; gap: 20px; margin-top: 25px; }
+            .breakdown-value { font-size: 24px; }
+            button { width: 100%; padding: 18px; font-size: 16px; }
+            .chart-container { padding: 15px; }
         }
     </style>
 </head>
@@ -201,7 +235,7 @@
         <div class="header">
             <div>
                 <h1>Neyro + 5arz Compounding Calculator</h1>
-                <p style="color:#00ff9d; margin-top:8px; font-weight:600; letter-spacing:1px; text-transform:uppercase; font-size:12px;">An Aurumrise University Wealth Strategy</p>
+                <p style="color:var(--neon-purple); margin-top:8px; font-weight:600; letter-spacing:1px; text-transform:uppercase; font-size:12px;">An Aurumrise University Wealth Strategy</p>
                 <p style="color:#aaa; margin-top:8px; font-size:14px; background:rgba(0,0,0,0.4); padding:10px 16px; border-radius:8px; border-left:3px solid #00ff9d; display:inline-block;">
                     <strong>Path:</strong> 5arz Tasks ➔ Aurum Neyro Wallet ➔ 1% Daily Compounding
                 </p>
@@ -230,7 +264,7 @@
             <div class="input-group">
                 <label>Daily Compounding Rate</label>
                 <input type="number" id="rate" value="1" step="0.01"> 
-                <span style="position:absolute; right:30px; top:68px; font-size:28px; color:#00ff9d;">%</span>
+                <span style="position:absolute; right:30px; top:68px; font-size:28px; color:var(--neon-purple);">%</span>
             </div>
             <div class="input-group">
                 <label>Number of Days</label>
@@ -242,7 +276,7 @@
 
         <div class="result" id="result-panel" style="display: none;">
             <div style="font-size:18px; color:#aaa; margin-bottom:8px;">FINAL BALANCE AFTER</div>
-            <div id="days-result" style="font-size:22px; font-weight:600; color:#00ff9d;"></div>
+            <div id="days-result" style="font-size:22px; font-weight:600; color:var(--neon-purple);"></div>
             <div id="final-balance" class="final-balance">$377,280</div>
             
             <div class="breakdown">
@@ -334,9 +368,9 @@
             }
             
             // Draw line
-            ctx.strokeStyle = '#00ff9d';
+            ctx.strokeStyle = '#9d00ff';
             ctx.lineWidth = 5;
-            ctx.shadowColor = '#00ff9d';
+            ctx.shadowColor = '#9d00ff';
             ctx.shadowBlur = 20;
             ctx.beginPath();
             
@@ -350,7 +384,7 @@
             ctx.stroke();
             
             // Glow points
-            ctx.fillStyle = '#00ff9d';
+            ctx.fillStyle = '#9d00ff';
             for (let i = 0; i < balances.length; i++) {
                 const x = padding + (graphWidth * i / (balances.length - 1));
                 const normalizedY = (maxVal - balances[i]) / range;
