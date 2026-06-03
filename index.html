@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neyro + 5arz Compounding Calculator | Aurumrise University</title>
-        <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+            <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
         
         :root {
             --neon-green: #00ff9d;
             --neon-purple: #9d00ff;
-            --dark: #0a0a0a;
+            --vibrant-pink: #ff007f;
+            --vibrant-cyan: #00f3ff;
+            --vibrant-orange: #ff5e00;
+            --dark: #05000a;
         }
         
         * {
@@ -19,9 +22,18 @@
             box-sizing: border-box;
         }
         
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         body {
             font-family: 'Inter', system-ui, sans-serif;
-            background: linear-gradient(135deg, #0a0a0a, #1a0033);
+            background: radial-gradient(circle at 15% 50%, rgba(157, 0, 255, 0.15), transparent 40%),
+                        radial-gradient(circle at 85% 30%, rgba(255, 0, 127, 0.15), transparent 40%),
+                        radial-gradient(circle at 50% 90%, rgba(0, 243, 255, 0.1), transparent 40%),
+                        #05000a;
             color: white;
             min-height: 100vh;
             padding: 20px;
@@ -33,12 +45,14 @@
         .calculator {
             width: 100%;
             max-width: 1100px;
-            background: rgba(15, 15, 30, 0.95);
+            background: rgba(15, 5, 25, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
             padding: 40px;
-            box-shadow: 0 0 60px rgba(157, 0, 255, 0.3),
-                        0 0 120px rgba(0, 255, 157, 0.1);
-            border: 2px solid rgba(157, 0, 255, 0.3);
+            box-shadow: 0 0 80px rgba(157, 0, 255, 0.2),
+                        inset 0 0 30px rgba(255, 0, 127, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .header {
@@ -50,39 +64,15 @@
             gap: 20px;
         }
         
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            padding: 12px 28px;
-            border-radius: 9999px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .neyro-logo {
-            background: linear-gradient(90deg, #00ff9d, #00cc7a);
-            color: #000;
-        }
-        
-        .5arz-logo {
-            background: linear-gradient(90deg, #9d00ff, #6a00cc);
-            color: white;
-            box-shadow: 0 0 20px rgba(157, 0, 255, 0.4);
-        }
-        
         h1 {
-            font-size: 32px;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--neon-purple), var(--neon-green));
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--vibrant-pink), var(--neon-purple), var(--vibrant-cyan));
+            background-size: 200% auto;
+            animation: gradientShift 6s ease infinite;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
         }
         
         .inputs {
@@ -93,25 +83,42 @@
         }
         
         .input-group {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.03);
             padding: 20px;
             border-radius: 16px;
-            border: 1px solid rgba(157, 0, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
+        .input-group::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--vibrant-pink), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
         .input-group:focus-within {
-            border-color: var(--neon-purple);
-            box-shadow: 0 0 15px rgba(157, 0, 255, 0.2);
-            background: rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(157, 0, 255, 0.15);
+        }
+
+        .input-group:focus-within::before {
+            opacity: 1;
         }
         
         label {
             display: block;
-            font-size: 15px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 600;
             margin-bottom: 8px;
-            color: #ccc;
+            color: #b3a0c4;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         input {
@@ -119,28 +126,32 @@
             background: transparent;
             border: none;
             outline: none;
-            font-size: 28px;
-            font-weight: 600;
+            font-size: 32px;
+            font-weight: 700;
             color: white;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
         }
         
         .result {
-            background: linear-gradient(135deg, #1a0033, #0a0a0a);
+            background: linear-gradient(135deg, rgba(157,0,255,0.1), rgba(255,0,127,0.05));
             border-radius: 20px;
             padding: 40px 30px;
             text-align: center;
             margin-bottom: 30px;
-            border: 3px solid var(--neon-purple);
-            box-shadow: 0 0 40px rgba(157, 0, 255, 0.4);
+            border: 1px solid rgba(255,0,127,0.3);
+            box-shadow: 0 0 50px rgba(255, 0, 127, 0.15);
+            position: relative;
         }
         
         .final-balance {
-            font-size: 62px;
-            font-weight: 700;
-            color: var(--neon-purple);
+            font-size: 72px;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--vibrant-cyan), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
             line-height: 1;
-            text-shadow: 0 0 20px rgba(157, 0, 255, 0.5);
+            filter: drop-shadow(0 0 15px rgba(0, 243, 255, 0.4));
         }
         
         .breakdown {
@@ -156,21 +167,25 @@
         }
         
         .breakdown-label {
-            font-size: 15px;
-            color: #aaa;
+            font-size: 13px;
+            color: #b3a0c4;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
         }
         
         .breakdown-value {
-            font-size: 28px;
-            font-weight: 600;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
         }
         
         .chart-container {
             margin-top: 30px;
-            background: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.3);
             padding: 20px;
             border-radius: 16px;
-            border: 1px solid rgba(157, 0, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         canvas {
@@ -179,52 +194,54 @@
         }
         
         button {
-            background: linear-gradient(90deg, var(--neon-purple), #6a00cc);
+            background: linear-gradient(90deg, var(--vibrant-pink), var(--neon-purple));
+            background-size: 200% auto;
             color: white;
             border: none;
             padding: 16px 48px;
             font-size: 18px;
-            font-weight: 700;
+            font-weight: 800;
             border-radius: 9999px;
             cursor: pointer;
             margin: 0 auto;
             display: block;
-            box-shadow: 0 0 30px rgba(157, 0, 255, 0.5);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.4);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 40px rgba(157, 0, 255, 0.7);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 40px rgba(255, 0, 127, 0.6);
+            background-position: right center;
         }
         
         button:active {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
         }
         
         .footer {
             text-align: center;
             margin-top: 40px;
             font-size: 13px;
-            color: #666;
+            color: #888;
             line-height: 1.5;
         }
         
         /* MOBILE OPTIMIZATION */
         @media (max-width: 768px) {
             body { padding: 10px; }
-            .calculator { padding: 25px 20px; border-radius: 16px; margin-bottom: 30px;}
+            .calculator { padding: 25px 20px; border-radius: 20px; margin-bottom: 30px;}
             .header { flex-direction: column; text-align: center; gap: 15px; }
-            h1 { font-size: 26px; }
-            .logo-container { justify-content: center; width: 100%; flex-direction: column; gap: 10px; }
-            .logo { font-size: 20px; padding: 10px 20px; width: 100%; justify-content: center; }
+            h1 { font-size: 32px; }
             .inputs { grid-template-columns: 1fr; gap: 16px; margin-bottom: 30px; }
             .input-group { padding: 15px; }
-            input { font-size: 24px; }
-            .result { padding: 30px 20px; }
-            .final-balance { font-size: 44px; }
+            input { font-size: 28px; }
+            .result { padding: 30px 15px; }
+            .final-balance { font-size: 48px; }
             .breakdown { flex-direction: column; gap: 20px; margin-top: 25px; }
-            .breakdown-value { font-size: 24px; }
+            .breakdown-value { font-size: 28px; }
             button { width: 100%; padding: 18px; font-size: 16px; }
             .chart-container { padding: 15px; }
         }
@@ -234,12 +251,12 @@
     <div class="calculator">
         <div class="header">
             <div>
-                <p style="color:var(--neon-purple); margin-bottom:8px; font-weight:600; letter-spacing:2px; text-transform:uppercase; font-size:12px;">An Aurumrise University Wealth Strategy</p>
+                <p style="color:var(--vibrant-pink); margin-bottom:8px; font-weight:600; letter-spacing:2px; text-transform:uppercase; font-size:12px;">An Aurumrise University Wealth Strategy</p>
                 <h1 style="font-size:36px; line-height:1.2;">The $0 to $100k AI Wealth Engine</h1>
                 <p style="color:#aaa; margin-top:12px; font-size:16px; max-width:600px; line-height:1.5;">
                     What if you could generate risk-free capital directly from your phone and immediately trigger an automatic compounding loop? Discover the hidden math behind the strategy.
                 </p>
-                <button onclick="document.querySelector('.inputs').scrollIntoView({behavior: 'smooth'})" style="margin-top: 24px; background: linear-gradient(90deg, var(--neon-purple), #6a00cc); color: white; padding: 16px 36px; font-size: 16px; box-shadow: 0 0 20px rgba(157, 0, 255, 0.4); display: inline-block; width: auto; font-weight: 700; border-radius: 9999px;">RUN THE SIMULATION</button>
+                <button onclick="document.querySelector('.inputs').scrollIntoView({behavior: 'smooth'})" style="margin-top: 24px;">RUN THE SIMULATION</button>
             </div>
         </div>
 
@@ -255,7 +272,7 @@
             <div class="input-group">
                 <label>Daily Compounding Rate</label>
                 <input type="number" id="rate" value="1" step="0.01"> 
-                <span style="position:absolute; right:30px; top:68px; font-size:28px; color:var(--neon-purple);">%</span>
+                <span style="position:absolute; right:30px; top:68px; font-size:28px; color:var(--vibrant-pink);">%</span>
             </div>
             <div class="input-group">
                 <label>Number of Days</label>
@@ -267,7 +284,7 @@
 
         <div class="result" id="result-panel" style="display: none;">
             <div style="font-size:18px; color:#aaa; margin-bottom:8px;">FINAL BALANCE AFTER</div>
-            <div id="days-result" style="font-size:22px; font-weight:600; color:var(--neon-purple);"></div>
+            <div id="days-result" style="font-size:22px; font-weight:600; color:var(--vibrant-pink);"></div>
             <div id="final-balance" class="final-balance">$377,280</div>
             
             <div class="breakdown">
@@ -281,7 +298,7 @@
                 </div>
             </div>
             
-            <button onclick="startEarning()" style="margin-top: 30px; background: linear-gradient(90deg, var(--neon-purple), #6a00cc); color: white; width: 100%; max-width: 400px; padding: 20px; font-size: 20px; box-shadow: 0 0 30px rgba(157, 0, 255, 0.4);">START EARNING ON 5ARZ</button>
+            <button onclick="startEarning()" style="margin-top: 30px;">START EARNING ON 5ARZ</button>
         </div>
 
         <div class="chart-container">
@@ -359,9 +376,9 @@
             }
             
             // Draw line
-            ctx.strokeStyle = '#9d00ff';
+            ctx.strokeStyle = '#00f3ff';
             ctx.lineWidth = 5;
-            ctx.shadowColor = '#9d00ff';
+            ctx.shadowColor = '#00f3ff';
             ctx.shadowBlur = 20;
             ctx.beginPath();
             
@@ -375,7 +392,7 @@
             ctx.stroke();
             
             // Glow points
-            ctx.fillStyle = '#9d00ff';
+            ctx.fillStyle = '#00f3ff';
             for (let i = 0; i < balances.length; i++) {
                 const x = padding + (graphWidth * i / (balances.length - 1));
                 const normalizedY = (maxVal - balances[i]) / range;
