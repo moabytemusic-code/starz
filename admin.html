@@ -187,6 +187,13 @@
             <!-- Codes will be injected here -->
         </div>
 
+        <h1 style="margin-top: 50px;">Captured Leads</h1>
+        <p style="text-align:center; color:#aaa; margin-bottom: 20px;">Users who opted in from the Starz Calculator.</p>
+        
+        <div class="code-list" id="leads-list">
+            <!-- Leads will be injected here -->
+        </div>
+
         <button id="logout-btn" style="background: rgba(255,255,255,0.05); margin-top:40px;">LOGOUT</button>
     </div>
 
@@ -204,6 +211,7 @@
         const loginError = document.getElementById('login-error');
         const addCodeBtn = document.getElementById('add-code-btn');
         const codeList = document.getElementById('code-list');
+        const leadsList = document.getElementById('leads-list');
 
         const provider = new GoogleAuthProvider();
 
@@ -213,6 +221,7 @@
                 loginSection.style.display = 'none';
                 dashboardSection.style.display = 'block';
                 loadCodes();
+                loadLeads();
             } else {
                 loginSection.style.display = 'block';
                 dashboardSection.style.display = 'none';
@@ -291,6 +300,45 @@
             } catch (error) {
                 console.error("Error loading codes", error);
                 codeList.innerHTML = '<p style="color:#ff4d4d;">Failed to load codes. Ensure Firestore rules allow reading.</p>';
+            }
+        }
+
+        // Load Leads from Firestore
+        async function loadLeads() {
+            leadsList.innerHTML = '<p style="text-align:center; color:#aaa;">Loading leads...</p>';
+            try {
+                const q = query(collection(db, "leads"));
+                const querySnapshot = await getDocs(q);
+                leadsList.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    leadsList.innerHTML = '<p style="text-align:center; color:#aaa;">No leads found.</p>';
+                    return;
+                }
+
+                const leads = [];
+                querySnapshot.forEach((docSnap) => leads.push(docSnap.data()));
+                leads.sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis());
+
+                leads.forEach((data) => {
+                    const name = data.name || 'Unknown';
+                    const email = data.email || 'No email';
+                    const date = data.createdAt ? data.createdAt.toDate().toLocaleDateString() : '';
+                    
+                    const item = document.createElement('div');
+                    item.className = 'code-item';
+                    item.innerHTML = `
+                        <div style="display:flex; flex-direction:column; gap:4px;">
+                            <div class="code-text" style="font-size:16px;">${name}</div>
+                            <div style="font-size:12px; color:#aaa;">${email} &bull; ${date}</div>
+                        </div>
+                    `;
+                    leadsList.appendChild(item);
+                });
+
+            } catch (error) {
+                console.error("Error loading leads", error);
+                leadsList.innerHTML = '<p style="color:#ff4d4d;">Failed to load leads.</p>';
             }
         }
 
