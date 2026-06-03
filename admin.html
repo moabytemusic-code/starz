@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starz Wealth - Admin Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+        
+        :root {
+            --vibrant-pink: #ff007f;
+            --neon-purple: #9d00ff;
+            --vibrant-cyan: #00f3ff;
+            --dark: #05000a;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: radial-gradient(circle at 15% 50%, rgba(157, 0, 255, 0.15), transparent 40%),
+                        radial-gradient(circle at 85% 30%, rgba(255, 0, 127, 0.15), transparent 40%),
+                        #05000a;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(15, 5, 25, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 0 80px rgba(157, 0, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(90deg, var(--vibrant-pink), var(--neon-purple), var(--vibrant-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #b3a0c4;
+            text-transform: uppercase;
+        }
+        
+        input {
+            width: 100%;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 18px;
+            color: white;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 15px rgba(157, 0, 255, 0.2);
+        }
+        
+        button {
+            width: 100%;
+            background: linear-gradient(90deg, var(--vibrant-pink), var(--neon-purple));
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 0, 127, 0.4);
+        }
+
+        button.danger {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            box-shadow: none;
+        }
+
+        button.danger:hover {
+            background: rgba(255, 0, 0, 0.3);
+        }
+        
+        .error {
+            color: #ff4d4d;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        #dashboard-section {
+            display: none;
+        }
+
+        .code-list {
+            margin-top: 30px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .code-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .code-item:last-child {
+            border-bottom: none;
+        }
+
+        .code-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--vibrant-cyan);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="login-section">
+        <h1>Admin Security Portal</h1>
+        <div class="input-group">
+            <label>Admin Email</label>
+            <input type="email" id="email" value="kentjigga@gmail.com">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password">
+        </div>
+        <button id="login-btn">AUTHENTICATE</button>
+        <div id="login-error" class="error"></div>
+    </div>
+
+    <div class="container" id="dashboard-section">
+        <h1>Affiliate Management</h1>
+        <p style="text-align:center; color:#aaa; margin-bottom: 20px;">Manage the referral codes used in the automated video pipeline.</p>
+        
+        <div class="input-group">
+            <label>New Affiliate Code</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="new-code" placeholder="e.g. STARZ2026">
+                <button id="add-code-btn" style="width: auto; margin: 0; padding: 0 30px;">ADD</button>
+            </div>
+        </div>
+
+        <div class="code-list" id="code-list">
+            <!-- Codes will be injected here -->
+        </div>
+
+        <button id="logout-btn" style="background: rgba(255,255,255,0.05); margin-top:40px;">LOGOUT</button>
+    </div>
+
+    <!-- Firebase Logic -->
+    <script type="module">
+        import { auth, db } from './firebase-config.js';
+        import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+        import { collection, getDocs, addDoc, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+        const loginSection = document.getElementById('login-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginError = document.getElementById('login-error');
+        const addCodeBtn = document.getElementById('add-code-btn');
+        const codeList = document.getElementById('code-list');
+
+        // Monitor Auth State
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginSection.style.display = 'none';
+                dashboardSection.style.display = 'block';
+                loadCodes();
+            } else {
+                loginSection.style.display = 'block';
+                dashboardSection.style.display = 'none';
+            }
+        });
+
+        // Login Logic
+        loginBtn.addEventListener('click', async () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            loginError.style.display = 'none';
+            
+            try {
+                loginBtn.textContent = 'AUTHENTICATING...';
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                loginError.textContent = error.message;
+                loginError.style.display = 'block';
+            } finally {
+                loginBtn.textContent = 'AUTHENTICATE';
+            }
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        // Load Affiliate Codes from Firestore
+        async function loadCodes() {
+            codeList.innerHTML = '<p style="text-align:center; color:#aaa;">Loading...</p>';
+            try {
+                const q = query(collection(db, "affiliates"));
+                const querySnapshot = await getDocs(q);
+                codeList.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    codeList.innerHTML = '<p style="text-align:center; color:#aaa;">No codes found.</p>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const code = data.code;
+                    
+                    const item = document.createElement('div');
+                    item.className = 'code-item';
+                    item.innerHTML = `
+                        <div class="code-text">${code}</div>
+                        <button class="danger" style="width: auto; padding: 8px 16px; margin:0;" data-id="${docSnap.id}">DELETE</button>
+                    `;
+                    codeList.appendChild(item);
+                });
+
+                // Attach delete listeners
+                document.querySelectorAll('.danger').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const id = e.target.getAttribute('data-id');
+                        await deleteDoc(doc(db, "affiliates", id));
+                        loadCodes(); // Reload list
+                    });
+                });
+
+            } catch (error) {
+                console.error("Error loading codes", error);
+                codeList.innerHTML = '<p style="color:#ff4d4d;">Failed to load codes. Ensure Firestore rules allow reading.</p>';
+            }
+        }
+
+        // Add New Code
+        addCodeBtn.addEventListener('click', async () => {
+            const newCodeInput = document.getElementById('new-code');
+            const code = newCodeInput.value.trim().toUpperCase();
+            
+            if (!code) return;
+            
+            addCodeBtn.textContent = '...';
+            try {
+                await addDoc(collection(db, "affiliates"), {
+                    code: code,
+                    createdAt: new Date()
+                });
+                newCodeInput.value = '';
+                loadCodes();
+            } catch (error) {
+                alert("Error adding code: " + error.message);
+            } finally {
+                addCodeBtn.textContent = 'ADD';
+            }
+        });
+
+    </script>
+</body>
+</html>
