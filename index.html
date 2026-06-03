@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neyro + 5arz Compounding Calculator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --neon-green: #00ff9d;
+            --neon-purple: #9d00ff;
+            --dark: #0a0a0a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a, #1a0033);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calculator {
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(15, 15, 30, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 0 60px rgba(0, 255, 157, 0.3),
+                        0 0 120px rgba(157, 0, 255, 0.2);
+            border: 2px solid rgba(0, 255, 157, 0.2);
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            padding: 12px 28px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .neyro-logo {
+            background: linear-gradient(90deg, #00ff9d, #00cc7a);
+            color: #000;
+        }
+        
+        .5arz-logo {
+            background: linear-gradient(90deg, #9d00ff, #6a00cc);
+            color: white;
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--neon-green), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .input-group {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 255, 157, 0.15);
+        }
+        
+        label {
+            display: block;
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #aaa;
+        }
+        
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 28px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .result {
+            background: linear-gradient(135deg, #001a0f, #1a0033);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 3px solid var(--neon-green);
+            box-shadow: 0 0 40px rgba(0, 255, 157, 0.4);
+        }
+        
+        .final-balance {
+            font-size: 62px;
+            font-weight: 700;
+            color: var(--neon-green);
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+        
+        .breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .breakdown-item {
+            text-align: center;
+        }
+        
+        .breakdown-label {
+            font-size: 15px;
+            color: #aaa;
+        }
+        
+        .breakdown-value {
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .chart-container {
+            margin-top: 30px;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 16px;
+        }
+        
+        canvas {
+            width: 100% !important;
+            max-height: 300px;
+        }
+        
+        button {
+            background: linear-gradient(90deg, var(--neon-green), #00cc7a);
+            color: black;
+            border: none;
+            padding: 16px 48px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 9999px;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+            box-shadow: 0 0 30px rgba(0, 255, 157, 0.5);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .calculator { padding: 25px; }
+            .final-balance { font-size: 48px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="header">
+            <div>
+                <h1>Neyro + 5arz Compounding Calculator</h1>
+                <p style="color:#aaa; margin-top:4px;">Real-time 1% daily AI bot projection</p>
+            </div>
+            
+            <div class="logo-container">
+                <div class="logo neyro-logo">
+                    ⚡ Neyro.network
+                </div>
+                <div style="font-size:32px; color:#666;">+</div>
+                <div class="logo 5arz-logo">
+                    5arz.com
+                </div>
+            </div>
+        </div>
+
+        <div class="inputs">
+            <div class="input-group">
+                <label>Initial Deposit (Neyro.network)</label>
+                <input type="number" id="initial" value="250" step="1">
+            </div>
+            <div class="input-group">
+                <label>Daily Deposit (from 5arz.com)</label>
+                <input type="number" id="daily" value="100" step="1">
+            </div>
+            <div class="input-group">
+                <label>Daily Compounding Rate</label>
+                <input type="number" id="rate" value="1" step="0.01"> 
+                <span style="position:absolute; right:30px; top:68px; font-size:28px; color:#00ff9d;">%</span>
+            </div>
+            <div class="input-group">
+                <label>Number of Days</label>
+                <input type="number" id="days" value="365" step="1">
+            </div>
+        </div>
+
+        <button onclick="calculate()">CALCULATE NOW</button>
+
+        <div class="result" id="result-panel" style="display: none;">
+            <div style="font-size:18px; color:#aaa; margin-bottom:8px;">FINAL BALANCE AFTER</div>
+            <div id="days-result" style="font-size:22px; font-weight:600; color:#00ff9d;"></div>
+            <div id="final-balance" class="final-balance">$377,280</div>
+            
+            <div class="breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">TOTAL YOU PUT IN</div>
+                    <div id="total-deposited" class="breakdown-value">$36,750</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">PROFIT FROM 1% DAILY COMPOUNDING</div>
+                    <div id="profit" class="breakdown-value">$340,530</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3 style="text-align:center; margin-bottom:15px; color:#ccc;">Growth Over Time</h3>
+            <canvas id="growthChart" width="1000" height="300"></canvas>
+        </div>
+
+        <div class="footer">
+            <strong>Hypothetical projection only</strong><br>
+            Assumes perfect 1% daily return every single day • Crypto trading involves high risk of loss • Not financial advice • For illustration purposes
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            const initial = parseFloat(document.getElementById('initial').value) || 0;
+            const dailyDeposit = parseFloat(document.getElementById('daily').value) || 0;
+            const rate = parseFloat(document.getElementById('rate').value) / 100 || 0;
+            const days = parseInt(document.getElementById('days').value) || 1;
+
+            let balance = initial;
+            let totalDeposited = initial;
+            const balances = [balance]; // for chart
+
+            for (let i = 1; i <= days; i++) {
+                balance = balance * (1 + rate);     // 1% daily compounding first
+                balance += dailyDeposit;            // then add daily deposit
+                totalDeposited += dailyDeposit;
+                if (i % Math.max(1, Math.floor(days / 60)) === 0 || i === days) {
+                    balances.push(Math.round(balance));
+                }
+            }
+
+            const profit = Math.round(balance - totalDeposited);
+            
+            // Update results
+            document.getElementById('result-panel').style.display = 'block';
+            document.getElementById('final-balance').textContent = '$' + Math.round(balance).toLocaleString();
+            document.getElementById('days-result').textContent = days + ' DAYS';
+            document.getElementById('total-deposited').textContent = '$' + totalDeposited.toLocaleString();
+            document.getElementById('profit').textContent = '$' + profit.toLocaleString();
+
+            // Draw chart
+            drawChart(balances, days);
+        }
+
+        function drawChart(balances, totalDays) {
+            const canvas = document.getElementById('growthChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Responsive canvas
+            const containerWidth = canvas.parentElement.clientWidth;
+            canvas.width = containerWidth;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const maxVal = Math.max(...balances);
+            const minVal = Math.min(...balances);
+            const range = maxVal - minVal || 1;
+            
+            const padding = 60;
+            const graphWidth = canvas.width - padding * 2;
+            const graphHeight = canvas.height - padding * 2;
+            
+            // Background grid
+            ctx.strokeStyle = 'rgba(0,255,157,0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = padding + (graphHeight * i / 5);
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(canvas.width - padding, y);
+                ctx.stroke();
+            }
+            
+            // Draw line
+            ctx.strokeStyle = '#00ff9d';
+            ctx.lineWidth = 5;
+            ctx.shadowColor = '#00ff9d';
+            ctx.shadowBlur = 20;
+            ctx.beginPath();
+            
+            for (let i = 0; i < balances.length; i++) {
+                const x = padding + (graphWidth * i / (balances.length - 1));
+                const normalizedY = (maxVal - balances[i]) / range;
+                const y = padding + (graphHeight * normalizedY);
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            
+            // Glow points
+            ctx.fillStyle = '#00ff9d';
+            for (let i = 0; i < balances.length; i++) {
+                const x = padding + (graphWidth * i / (balances.length - 1));
+                const normalizedY = (maxVal - balances[i]) / range;
+                const y = padding + (graphHeight * normalizedY);
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Labels
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 14px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('$0', padding - 10, canvas.height - 20);
+            ctx.fillText('$' + Math.round(maxVal).toLocaleString(), padding - 10, padding + 10);
+            
+            ctx.textAlign = 'center';
+            ctx.fillText('Day 1', padding, canvas.height - 30);
+            ctx.fillText('Day ' + totalDays, canvas.width - padding, canvas.height - 30);
+        }
+
+        // Auto-calculate on any change
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => {
+                calculate();
+            });
+        });
+
+        // Initial calculation
+        window.onload = () => {
+            calculate();
+        };
+    </script>
+</body>
+</html>
